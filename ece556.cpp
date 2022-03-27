@@ -15,22 +15,52 @@ int readBenchmark(const char *fileName, routingInst *rst){
   if (inputFile.is_open() ) { //parse through file
     inputFile >> bufferString; // skip "grid"
     inputFile >> bufferString;
-    rst.gx << (int)bufferString - (int)'0'; // save grid dimensions
+    rst.gx = (int)bufferString - (int)'0'; // save grid dimensions
     inputFile >> bufferString;
-    rst.gy << (int)bufferString - (int)'0';
+    rst.gy = (int)bufferString - (int)'0';
 
     inputFile >> bufferString; // skip "capacity"
-    rst.cap << (int)bufferString - (int)'0';
+    rst.cap = (int)bufferString - (int)'0';
 
     inputFile >> bufferString; // skip "num"
     inputFile >> bufferString; // skip "net"
     inputFile >> bufferString;
-    rst.numNets << (int)bufferString - (int)'0';
+    rst.numNets = (int)bufferString - (int)'0';
 
-    for (int i = 1; i <= rst.numNets; ++i) {
-      net temp 
+    net nets_array[rst.numNets] = {};
+    
+    for (int i = 0; i < rst.numNets; ++i) { // create array of nets
+      net temp;
+      int id = i;
 
-  }
+      int numPins;
+      inputFile >> bufferString; // skip "n#"
+      inputFile >> bufferString; 
+      numPins = (int)bufferString - (int)'0';
+
+      point points_array[numPins] = {};
+      
+      for (int j = 0; j < numPins; ++j) { // create array of points
+	inputFile >> bufferString;
+	int x = (int)bufferString - (int)'0';
+
+	inputFile >> bufferString;
+	int y = (int)bufferString - (int)'0';
+
+	points_array[j] = {x, y};
+	
+      };
+
+      temp = {i, numPins, *points_array, NULL);
+      nets_array[i] = *temp; // add completed net to array
+    };
+
+    rst.nets = *nets_array; // assign completed net array
+
+    inputFile >> bufferString;
+    rst.numEdges = (int)bufferString - (int)'0';
+    
+  };
 
   return 1;
 }
