@@ -58,8 +58,13 @@ int readBenchmark(const char *fileName, routingInst *rst){
     rst.nets = *nets_array; // assign completed net array
 
     inputFile >> bufferString;
-    rst.numEdges = (int)bufferString - (int)'0';
-    
+    int blocks  = (int)bufferString - (int)'0';
+
+    rst.numEdges = (rst.gx)*(rst.gy - 1) + (rst.gy)*(rst.gx - 1);
+
+    // need to implement an edgeID formula
+    //
+
   };
 
   return 1;
