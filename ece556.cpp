@@ -70,6 +70,7 @@ int readBenchmark(const char *fileName, routingInst *rst){
     for (int i = 0; i < numEdges; ++i) { // set all non-blockages to default cap
       if(!rst->edgeCaps[i]) {
         rst->edgeCaps[i] = rst->cap;
+      }
     }
 
     for (int i = 0; i < numEdges; ++i) { // set all non-blockages to default cap
@@ -91,7 +92,7 @@ int solveRouting(routingInst *rst){
   for(int i = 0; i < rst->numNets; i++)
   {
     rst->nets[i].nroute.numSegs = rst->nets[i].numPins - 1;
-    rst->nets[i].nroute.segments = (segment)malloc(rst->nets[i].nroute.numSegssizeof(segment));
+    rst->nets[i].nroute.segments = (segment*)malloc(rst->nets[i].nroute.numSegs*sizeof(segment));
     if(rst->nets[i].nroute.segments == NULL)
     {
       fprintf(stderr, "Memory not allocated for route segments \n");
@@ -112,7 +113,7 @@ int solveRouting(routingInst *rst){
         abs(x1) + abs(y1);
 
       rst->nets[i].nroute.segments[j].edges =
-        (int)malloc(rst->nets[i].nroute.segments[j].numEdges*sizeof(int));
+        (int*)malloc(rst->nets[i].nroute.segments[j].numEdges*sizeof(int));
       if( rst->nets[i].nroute.segments[j].edges == NULL)
       {
         fprintf(stderr, "Memory not allocated for edge array.\n");
@@ -133,6 +134,8 @@ int writeOutput(const char *outRouteFile, routingInst *rst){
     printf("Argument file or routingInst is null");
     return 0;
   }
+
+  FILE* outFile;
 	
   /* Open output file to begin writing */	
   outFile = fopen(outRouteFile, "w");
@@ -141,9 +144,9 @@ int writeOutput(const char *outRouteFile, routingInst *rst){
   for (int i = 0; i < rst->numNets; i++){
 	  
 	  /* Print net number */
-	  fprintf(outFile,"n" + i + "\n");
+    fprintf(outFile,"n%d \n",i);
 	  
-	  for (int m = 0; m < rst->nets[i].nroute.numSegs.; m++){
+	  for (int m = 0; m < rst->nets[i].nroute.numSegs; m++){
 		  
 		  for (int n = 0; n < rst->nets[i].nroute.segments[m].numEdges; n++){
 			  
