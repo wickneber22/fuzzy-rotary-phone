@@ -48,7 +48,7 @@ int readBenchmark(const char *fileName, routingInst *rst){
 
     rst->edgeCaps = (int*)malloc(numEdges * sizeof(int));
     rst->edgeUtils = (int*)malloc(numEdges * sizeof(int));
-    for (int i = 0; i < blocks; ++i) { // find IDs of blockages and update cap            \
+    for (int i = 0; i < blocks; ++i) { // find IDs of blockages and update cap 
 
       int bx1;
       int bx2;
@@ -169,7 +169,23 @@ int writeOutput(const char *outRouteFile, routingInst *rst){
 
 
 int release(routingInst *rst){
-  /*********** TO BE FILLED BY YOU **********/
+  // start at bottom work back to top
+  for (int i = 0; i < rst->numNets; ++i) { // parse through each net
+    for (int j = 0; j < rst->nets[i].nroute.numSegs; ++j) { // each segment of route
+      free(rst->nets[i].nroute.segments[j].edges);
+    }
+    free(rst->nets[i].nroute.segments);
+
+    free(rst->nets[i].pins);
+  }
+
+  free(rst->nets);
+
+  free(rst->edgeCaps);
+
+  free(rst->edgeUtils);
+
+  free(rst)
 
   return 1;
 }
